@@ -79,7 +79,7 @@ pub fn run(argv: &[String]) -> Result<Option<i32>> {
     let args = match parse_args(&rest) {
         Ok(a) => a,
         Err(e) => {
-            eprintln!("tuxedo: {e}");
+            eprintln!("tuxedo-hooks: {e}");
             return Ok(Some(2));
         }
     };
@@ -117,13 +117,13 @@ pub fn run(argv: &[String]) -> Result<Option<i32>> {
         "listproj" | "lsprj" => cmd_listtags(&store, json, TagKind::Project),
         "listcon" | "lsc" => cmd_listtags(&store, json, TagKind::Context),
         other => {
-            eprintln!("tuxedo: unknown command: {other}");
+            eprintln!("tuxedo-hooks: unknown command: {other}");
             2
         }
     };
     for report in store.take_hook_reports() {
         if report.failed() {
-            eprintln!("tuxedo: {}", report.diagnostic());
+            eprintln!("tuxedo-hooks: {}", report.diagnostic());
             if code == 0 {
                 code = 1;
             }
@@ -158,12 +158,12 @@ fn is_mutating_command(cmd: &str) -> bool {
 // ----- helpers -----------------------------------------------------------
 
 fn err(msg: impl std::fmt::Display) -> i32 {
-    eprintln!("tuxedo: {msg}");
+    eprintln!("tuxedo-hooks: {msg}");
     1
 }
 
 fn usage(msg: impl std::fmt::Display) -> i32 {
-    eprintln!("usage: tuxedo {msg}");
+    eprintln!("usage: tuxedo-hooks {msg}");
     2
 }
 
@@ -207,7 +207,7 @@ fn store_error(json: bool, action: &str, e: impl std::fmt::Display) -> i32 {
         s.push('}');
         eprintln!("{s}");
     } else {
-        eprintln!("tuxedo: {e}");
+        eprintln!("tuxedo-hooks: {e}");
     }
     1
 }

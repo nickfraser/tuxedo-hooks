@@ -9,7 +9,8 @@ static NEXT: AtomicUsize = AtomicUsize::new(0);
 
 fn fixture(script_body: &str) -> (PathBuf, PathBuf) {
     let n = NEXT.fetch_add(1, Ordering::Relaxed);
-    let dir = std::env::temp_dir().join(format!("tuxedo-cli-hook-{}-{n}", std::process::id()));
+    let dir =
+        std::env::temp_dir().join(format!("tuxedo-hooks-cli-hook-{}-{n}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).expect("create fixture directory");
     let todo = dir.join("todo.txt");
@@ -21,7 +22,7 @@ fn fixture(script_body: &str) -> (PathBuf, PathBuf) {
         .permissions();
     permissions.set_mode(0o755);
     std::fs::set_permissions(&script, permissions).expect("make hook executable");
-    let config = dir.join("config/tuxedo/config.toml");
+    let config = dir.join("config/tuxedo-hooks/config.toml");
     std::fs::create_dir_all(config.parent().expect("config parent")).expect("create config dir");
     std::fs::write(
         &config,
@@ -32,13 +33,13 @@ fn fixture(script_body: &str) -> (PathBuf, PathBuf) {
 }
 
 fn run_add(dir: &Path, todo: &Path) -> std::process::Output {
-    Command::new(env!("CARGO_BIN_EXE_tuxedo"))
+    Command::new(env!("CARGO_BIN_EXE_tuxedo-hooks"))
         .args(["--json", "add", "hooked task"])
         .env("TODO_FILE", todo)
         .env("DONE_FILE", dir.join("done.txt"))
         .env("XDG_CONFIG_HOME", dir.join("config"))
         .output()
-        .expect("run tuxedo")
+        .expect("run tuxedo-hooks")
 }
 
 #[test]

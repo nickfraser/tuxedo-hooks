@@ -1,6 +1,6 @@
 //! Persisted UI preferences, located per the XDG Base Directory Specification.
 //!
-//! Path: `${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo/config.toml`
+//! Path: `${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo-hooks/config.toml`
 //!
 //! Format: simple `key = value` lines. Lines starting with `#` and blank lines
 //! are ignored. Unknown keys are ignored so older binaries won't choke on
@@ -112,7 +112,7 @@ impl Config {
         Ok(())
     }
 
-    /// Resolve `${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo/config.toml`.
+    /// Resolve `${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo-hooks/config.toml`.
     /// Returns None only when neither XDG_CONFIG_HOME nor HOME is set.
     pub fn path() -> Option<PathBuf> {
         let base = crate::xdg::config_home()?;
@@ -130,7 +130,7 @@ impl Config {
     /// Construct the config path under an explicit XDG-style base directory.
     /// Used by tests to avoid mutating process env.
     pub fn path_in(xdg_base: &Path) -> PathBuf {
-        xdg_base.join("tuxedo").join("config.toml")
+        xdg_base.join("tuxedo-hooks").join("config.toml")
     }
 }
 
@@ -201,7 +201,7 @@ fn parse(s: &str) -> Config {
 }
 
 fn serialize(c: &Config) -> String {
-    let mut out = String::from("# tuxedo config\n");
+    let mut out = String::from("# tuxedo-hooks config\n");
     // writeln! against a String is infallible; the unwrap can never fire.
     if let Some(v) = &c.hooks.after_mutation {
         let _ = writeln!(out, "hook.after_mutation = {}", quote_hook_path(v));
@@ -291,7 +291,7 @@ mod tests {
     fn round_trips() {
         let c = Config {
             hooks: HookConfig {
-                after_mutation: Some("/opt/tuxedo/hooks/mutation".into()),
+                after_mutation: Some("/opt/tuxedo-hooks/hooks/mutation".into()),
             },
             theme: Some("Nord".into()),
             density: Some(Density::Cozy),
@@ -443,18 +443,18 @@ mod tests {
     #[test]
     fn save_then_load_via_explicit_path() {
         let base = std::env::temp_dir().join(format!(
-            "tuxedo-test-{}-{:?}",
+            "tuxedo-hooks-test-{}-{:?}",
             std::process::id(),
             std::thread::current().id()
         ));
         let _ = fs::remove_dir_all(&base);
         let path = Config::path_in(&base);
         assert!(path.starts_with(&base));
-        assert!(path.ends_with("tuxedo/config.toml"));
+        assert!(path.ends_with("tuxedo-hooks/config.toml"));
 
         let written = Config {
             hooks: HookConfig {
-                after_mutation: Some("/tmp/tuxedo-all-hook".into()),
+                after_mutation: Some("/tmp/tuxedo-hooks-all-hook".into()),
             },
             theme: Some("Dawn".into()),
             density: Some(Density::Compact),

@@ -58,7 +58,7 @@ impl Store {
             return DrainReport::default();
         }
 
-        // Coordinate with `tuxedo serve`'s POST handler (and other tuxedo
+        // Coordinate with `tuxedo-hooks serve`'s POST handler (and other Tuxedo Hooks
         // instances). The lock spans the rename + read + cleanup.
         let _lock = match inbox::acquire_lock(&self.file_path) {
             Ok(l) => l,
@@ -228,7 +228,8 @@ mod tests {
         use std::sync::atomic::{AtomicUsize, Ordering};
         static N: AtomicUsize = AtomicUsize::new(0);
         let n = N.fetch_add(1, Ordering::Relaxed);
-        let dir = std::env::temp_dir().join(format!("tuxedo-inbox-{}-{}", std::process::id(), n));
+        let dir =
+            std::env::temp_dir().join(format!("tuxedo-hooks-inbox-{}-{}", std::process::id(), n));
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         let todo_path = dir.join("todo.txt");
@@ -264,7 +265,7 @@ mod tests {
     fn drain_emits_one_create_hook_for_a_batch() {
         let (mut store, dir, _) = build_store_with_dir("existing\n");
         store.set_hooks(HookConfig {
-            after_mutation: Some("/definitely/not/a/tuxedo-hook".into()),
+            after_mutation: Some("/definitely/not/a/tuxedo-hooks-hook".into()),
         });
         std::fs::write(dir.join("inbox.txt"), "one\ntwo\n").unwrap();
 

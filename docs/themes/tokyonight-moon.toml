@@ -1,6 +1,6 @@
-# TokyoNight Moon theme for Tuxedo
+# TokyoNight Moon theme for tuxedo-hooks
 # Original TokyoNight palette: https://github.com/folke/tokyonight.nvim
-# Tuxedo theme adaptation by github.com/ronload
+# tuxedo-hooks theme adaptation by github.com/ronload
 
 name = TokyoNight Moon
 

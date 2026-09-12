@@ -1,31 +1,29 @@
-# tuxedo
+# tuxedo-hooks
 
 A fast, keyboard-driven terminal UI for [todo.txt](http://todotxt.org/).
 Vim-style bindings, atomic writes, instant external-edit detection, and five
-hand-tuned themes — all in a single static binary.
+hand-tuned themes in a single native binary.
 
-```sh
-brew install tuxedo
-```
-
-[![CI](https://github.com/webstonehq/tuxedo/actions/workflows/ci.yml/badge.svg)](https://github.com/webstonehq/tuxedo/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/webstonehq/tuxedo?logo=github)](https://github.com/webstonehq/tuxedo/releases/latest)
+[![CI](https://github.com/nickfraser/tuxedo-hooks/actions/workflows/ci.yml/badge.svg)](https://github.com/nickfraser/tuxedo-hooks/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/nickfraser/tuxedo-hooks?logo=github)](https://github.com/nickfraser/tuxedo-hooks/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
 [![Rust](https://img.shields.io/badge/rust-2024-orange.svg?logo=rust)](https://www.rust-lang.org)
 
-![tuxedo demo](docs/demo.gif)
-
-For a more in-depth walkthrough, please watch [this video](https://www.youtube.com/watch?v=mT1tg6SQ_Ag) by [@IogaMaster](https://github.com/IogaMaster).
+Tuxedo Hooks is independently maintained from the
+[upstream Tuxedo project](https://github.com/webstonehq/tuxedo). Its focus is
+the post-mutation hook workflow while retaining the TUI and CLI. The upstream
+walkthrough by [@IogaMaster](https://github.com/IogaMaster) remains useful for
+the shared TUI features.
 
 ## Highlights
 
 - **Pure todo.txt.** Reads and writes the [standard format](https://github.com/todotxt/todo.txt) — every line is plain text you can edit with anything else.
-- **TUI and CLI in one binary.** Run `tuxedo` for the interactive UI, or `tuxedo <command>` for a [todo.txt-cli](https://github.com/todotxt/todo.txt-cli)-compatible command line (`add`, `ls`, `do`, `pri`, `archive`, …) — scriptable, with `--json` output and `$TODO_DIR` / `$TODO_FILE` / `$DONE_FILE` support.
-- **Natural-language add.** Type prose into the add prompt — `Pay rent monthly on the first, show 3 days before due, project home` — and tuxedo rewrites it to canonical todo.txt for you to review and save. Local, offline, no AI service.
+- **TUI and CLI in one binary.** Run `tuxedo-hooks` for the interactive UI, or `tuxedo-hooks <command>` for a [todo.txt-cli](https://github.com/todotxt/todo.txt-cli)-compatible command line (`add`, `ls`, `do`, `pri`, `archive`, …) — scriptable, with `--json` output and `$TODO_DIR` / `$TODO_FILE` / `$DONE_FILE` support.
+- **Natural-language add.** Type prose into the add prompt — `Pay rent monthly on the first, show 3 days before due, project home` — and tuxedo-hooks rewrites it to canonical todo.txt for you to review and save. Local, offline, no AI service.
 - **Phone capture.** Press `s` for a QR pointing at a tiny PWA on your machine's LAN — type tasks from your phone and they appear in the list. Captures land in a sibling `inbox.txt` first, so any tool that can append a line (shell, iOS Shortcuts, cron) is also a capture source.
 - **Vim keys, no surprises.** `j` / `k` to move, `dd` to delete, `gg` / `G` to jump, `u` to undo (50 levels), chord prompts (`gg`, `dd`, `fp`, `fc`) with a 600 ms window.
 - **Command palette.** `:` or `Ctrl-P` opens a fuzzy palette over every action — type a few letters, hit Enter. Same matcher as `/` search, ranked so start-of-label hits beat word-boundary hits beat mid-word hits.
-- **Atomic, sync-friendly writes.** Every change goes through write-temp-then-rename. If another process — Dropbox, an editor, a script — modifies the file, tuxedo reloads on the next keypress (or within ~250 ms while idle) and flashes a notice.
+- **Atomic, sync-friendly writes.** Every change goes through write-temp-then-rename. If another process — Dropbox, an editor, a script — modifies the file, tuxedo-hooks reloads on the next keypress (or within ~250 ms while idle) and flashes a notice.
 - **Sibling-file archive.** `A` moves completed tasks to `done.txt` next to your file, atomically.
 - **Filter, sort, multi-select.** Cycle by `+project` or `@context`, sort by priority / due / file order, and bulk-complete or bulk-delete in visual mode.
 - **Saved searches.** Name the active `/`-search with `fs`, then recall it any time by cycling saved filters with `ff`. Stored as plain `filter.<name>` lines in the config — hand-editable like everything else.
@@ -47,7 +45,7 @@ For a more in-depth walkthrough, please watch [this video](https://www.youtube.c
     <summary>How to generate the screenshots and demo</summary>
     <p>The screenshots in the table above are checked-in SVGs. Regenerate them with:</p>
     <pre>mise run screenshots</pre>
-    <p>The hero GIF at the top is recorded with <a href="https://github.com/charmbracelet/vhs">vhs</a> from <code>docs/demo.tape</code>. Regenerate it with:</p>
+    <p>An optional demo GIF can be recorded with <a href="https://github.com/charmbracelet/vhs">vhs</a> from <code>docs/demo.tape</code>:</p>
     <pre>mise run demo</pre>
 </details>
 
@@ -63,15 +61,15 @@ For a more in-depth walkthrough, please watch [this video](https://www.youtube.c
 
 ### Custom themes
 
-Beyond the built-ins, tuxedo loads any `*.toml` file you drop in
-`${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo/themes/`. Each one joins the `T`
+Beyond the built-ins, tuxedo-hooks loads any `*.toml` file you drop in
+`${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo-hooks/themes/`. Each one joins the `T`
 picker in sorted filename order. Ready-made themes live in
 [`docs/themes/`](docs/themes) — copy one in and press `T`:
 
 ```sh
-mkdir -p ~/.config/tuxedo/themes
-curl -o ~/.config/tuxedo/themes/gruvbox-dark-soft.toml \
-  https://raw.githubusercontent.com/webstonehq/tuxedo/main/docs/themes/gruvbox-dark-soft.toml
+mkdir -p ~/.config/tuxedo-hooks/themes
+curl -o ~/.config/tuxedo-hooks/themes/gruvbox-dark-soft.toml \
+  https://raw.githubusercontent.com/nickfraser/tuxedo-hooks/main/docs/themes/gruvbox-dark-soft.toml
 ```
 
 <details>
@@ -120,57 +118,51 @@ another theme is skipped with a warning at startup.
 
 ## Install
 
-### Homebrew (macOS, Linux)
-
-```sh
-brew install tuxedo
-```
-
 ### Prebuilt binaries
 
-Download the archive for your platform from the [latest release](https://github.com/webstonehq/tuxedo/releases/latest) and put `tuxedo` on your `PATH`.
+Download the archive for Linux x86_64 from the [latest release](https://github.com/nickfraser/tuxedo-hooks/releases/latest) and put `tuxedo-hooks` on your `PATH`.
 
-Targets: `x86_64-unknown-linux-gnu`, `aarch64-unknown-linux-gnu`, `x86_64-apple-darwin`, `aarch64-apple-darwin`, `x86_64-pc-windows-msvc`. Each archive ships with a `.sha256` checksum.
+For now, Linux x86_64 (`x86_64-unknown-linux-gnu`) is the only prebuilt release target. Each archive ships with a `.sha256` checksum.
 
 ### From source
 
 ```sh
-cargo install --git https://github.com/webstonehq/tuxedo
+cargo install --git https://github.com/nickfraser/tuxedo-hooks
 ```
 
 Or clone and build:
 
 ```sh
-git clone https://github.com/webstonehq/tuxedo
-cd tuxedo
+git clone https://github.com/nickfraser/tuxedo-hooks
+cd tuxedo-hooks
 cargo build --release
-./target/release/tuxedo [FILE]
+./target/release/tuxedo-hooks [FILE]
 ```
 
 Requires the Rust 2024 edition (recent stable toolchain).
 
 ## Usage
 
-`tuxedo` is two things in one binary: an interactive TUI, and a one-shot
+`tuxedo-hooks` is two things in one binary: an interactive TUI, and a one-shot
 command line. With no subcommand it launches the TUI; with a recognized
 subcommand it runs the [command line](#command-line-interface) and exits.
 
 ```sh
-tuxedo [FILE]      # launch the TUI on FILE (created if missing)
-tuxedo             # TUI on the default file (see resolution below)
-tuxedo --sample    # open the bundled sample file in the temp dir
-tuxedo <command>   # run a one-shot CLI command — see "Command-line interface"
-tuxedo update      # print upgrade instructions for your install
-tuxedo --help
-tuxedo --version
+tuxedo-hooks [FILE]      # launch the TUI on FILE (created if missing)
+tuxedo-hooks             # TUI on the default file (see resolution below)
+tuxedo-hooks --sample    # open the bundled sample file in the temp dir
+tuxedo-hooks <command>   # run a one-shot CLI command — see "Command-line interface"
+tuxedo-hooks update      # print upgrade instructions for your install
+tuxedo-hooks --help
+tuxedo-hooks --version
 ```
 
-When a newer release is available, the status bar shows `↑ <version> (tuxedo
+When a newer release is available, the status bar shows `↑ <version> (tuxedo-hooks
 update)` next to the version. The check runs in the background, is cached at
-`$XDG_CACHE_HOME/tuxedo/latest_version.json` for 24 h, and fails silently
-when offline. Set `TUXEDO_NO_UPDATE_CHECK=1` to disable.
+`$XDG_CACHE_HOME/tuxedo-hooks/latest_version.json` for 24 h, and fails silently
+when offline. Set `TUXEDO_HOOKS_NO_UPDATE_CHECK=1` to disable.
 
-### Which file tuxedo opens
+### Which file tuxedo-hooks opens
 
 Both the TUI and the CLI resolve the todo file the same way, in order:
 
@@ -197,7 +189,7 @@ export DONE_FILE="$TODO_DIR/done.txt"
 Edits are persisted on every change via atomic write (write `.tmp`, rename).
 
 If the file changes on disk (another editor, a sync client, a script),
-tuxedo notices on the next keypress, or within ~250 ms while idle, and
+tuxedo-hooks notices on the next keypress, or within ~250 ms while idle, and
 reloads. The keystroke that triggered the reload is consumed — press it
 again to act on the fresh state — and the status bar flashes a notice.
 
@@ -208,19 +200,19 @@ can browse, un-archive, or permanently delete past tasks.
 
 ## Command-line interface
 
-When the first argument is a recognized subcommand, tuxedo runs a one-shot
+When the first argument is a recognized subcommand, tuxedo-hooks runs a one-shot
 command instead of launching the TUI. The surface mirrors
 [todo.txt-cli](https://github.com/todotxt/todo.txt-cli/wiki/Usage) — same
 commands, aliases, task numbering, and output — so it's a drop-in for scripts
 and aliases.
 
 ```sh
-tuxedo add "Pay rent +home @bank due:2026-07-01"   # or: tuxedo a "..."
-tuxedo ls @bank                                     # filter by context
-tuxedo do 3                                          # mark task 3 complete
-tuxedo pri 3 A                                        # set priority
-tuxedo archive                                        # move done tasks to done.txt
-tuxedo ls --json | jq .                              # machine-readable output
+tuxedo-hooks add "Pay rent +home @bank due:2026-07-01"   # or: tuxedo-hooks a "..."
+tuxedo-hooks ls @bank                                     # filter by context
+tuxedo-hooks do 3                                          # mark task 3 complete
+tuxedo-hooks pri 3 A                                        # set priority
+tuxedo-hooks archive                                        # move done tasks to done.txt
+tuxedo-hooks ls --json | jq .                              # machine-readable output
 ```
 
 | Command | Aliases | Arguments | Description |
@@ -252,17 +244,17 @@ shown` footer, matching todo.txt-cli.
   print an array of task objects; mutating commands print a result object.
   No prompts or footers are written in this mode.
 
-Global flags may appear before the subcommand (`tuxedo -f del 3`).
+Global flags may appear before the subcommand (`tuxedo-hooks -f del 3`).
 
 **Differences from todo.txt-cli:** `do` marks a task complete but does **not**
 auto-archive it — completed tasks stay in the file until you run `archive` (or
-press `A` in the TUI), matching tuxedo's interactive model. There is no `-d`
+press `A` in the TUI), matching the tuxedo-hooks interactive model. There is no `-d`
 config-file flag; configure paths with the environment variables above.
 
 ## Keybindings
 
 Custom normal-mode keybindings can be added in
-`${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo/keybinds.toml`:
+`${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo-hooks/keybinds.toml`:
 
 The block below lists every rebindable action with the key it ships with —
 copy it, then change the keys you care about and delete the rest (anything you
@@ -494,7 +486,7 @@ Standard [todo.txt](https://github.com/todotxt/todo.txt) lines:
   (business days), `w` (weeks), and `m` (months). Only the first `due:` term
   in a search is used this way; the rest of the query is matched as free text
   against the task body, same as before
-- `rec:[+]N{d,b,w,m,y}` — recurrence; on completion (`x`), tuxedo inserts
+- `rec:[+]N{d,b,w,m,y}` — recurrence; on completion (`x`), tuxedo-hooks inserts
   a fresh copy of the task with `due:` advanced by `N` days, business
   days (Mon–Fri), weeks, months, or years. The `+` prefix means
   *strict* recurrence anchored to the previous due date (e.g.
@@ -542,7 +534,7 @@ Recognized vocabulary:
 - **Priority** — `high priority` → A, `medium priority` → B, `low priority` → C, or `priority A`.
 
 Parsing is rule-based and runs locally — no network calls, no API key. If
-the buffer already contains a `due:`, `rec:`, or `t:` token, tuxedo assumes
+the buffer already contains a `due:`, `rec:`, or `t:` token, tuxedo-hooks assumes
 you've typed canonical form and saves it directly on the first Enter.
 
 ## Phone capture
@@ -553,7 +545,7 @@ get a minimal PWA you can install to your home screen. Type a task, tap
 Add, and within a tick it shows up in your task list.
 
 Captures never touch `todo.txt` directly. They land in a sibling
-`inbox.txt`, which tuxedo drains on every external-change poll: each line
+`inbox.txt`, which tuxedo-hooks drains on every external-change poll: each line
 is run through the same natural-language pipeline as the `n` add prompt,
 given a creation date if missing, and merged into `todo.txt` as a single
 undoable batch (`u` rolls back the whole drain at once).
@@ -568,7 +560,7 @@ echo "Call dentist due:2026-06-01" >> ~/notes/inbox.txt
 
 Shell aliases, iOS Shortcuts writing to a synced folder, cron jobs,
 email-to-file gateways — pick your producer. As long as it appends a line
-to the sibling `inbox.txt`, tuxedo picks it up.
+to the sibling `inbox.txt`, tuxedo-hooks picks it up.
 
 The server:
 
@@ -585,7 +577,10 @@ The server:
   WiFi anyone passive-sniffing can recover the token. To rotate, delete
   `share_token` from `config.toml` and press `s` again.
 
-Drains from tuxedo-managed producers are crash-safe: the capture server
+For interoperability, the inbox sidecar protocol retains the existing `tuxedo`
+names: producers continue to append to the sibling `inbox.txt` file.
+
+Drains from tuxedo-hooks-managed producers are crash-safe: the capture server
 holds the same advisory lock as the TUI's rename-and-merge, and any
 staging file left over from an interrupted drain is replayed on the
 next session. Plain shell appends are useful for lightweight capture,
@@ -594,10 +589,30 @@ if a producer must be serialized with the TUI drain.
 
 ## Configuration
 
-Persisted to `${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo/config.toml`. Cycling
+Persisted to `${XDG_CONFIG_HOME:-$HOME/.config}/tuxedo-hooks/config.toml`. Cycling
 theme, density, or sort, and toggling sidebars / line-numbers / done-visibility
 all update the file. Unknown keys are ignored, so older binaries don't break
 on newer files.
+
+### Migrating from Tuxedo
+
+Tuxedo Hooks keeps its state separate from upstream Tuxedo. It does not read
+`~/.config/tuxedo/` automatically. To reuse selected settings, copy them into
+the new namespace before launching Tuxedo Hooks:
+
+```sh
+mkdir -p ~/.config/tuxedo-hooks
+grep -v '^[[:space:]]*hook\.after_mutation[[:space:]]*=' \
+  ~/.config/tuxedo/config.toml > ~/.config/tuxedo-hooks/config.toml
+cp ~/.config/tuxedo/keybinds.toml ~/.config/tuxedo-hooks/ 2>/dev/null || true
+cp -R ~/.config/tuxedo/themes ~/.config/tuxedo-hooks/ 2>/dev/null || true
+```
+
+The update cache and default notes directory intentionally start fresh. Existing
+`TODO_FILE`, `TODO_DIR`, `DONE_FILE`, and `NOTES_DIR` settings remain shared
+todo.txt conventions. The copied configuration intentionally omits
+`hook.after_mutation`: update the hook script to use the
+`TUXEDO_HOOKS_*` variables below, then add that setting back.
 
 **Hot-reload.** Edits to `config.toml` are picked up while the TUI is running —
 change the theme, density, sort, layout, saved filters, or any other field and
@@ -612,22 +627,22 @@ press.
 
 ### Post-commit hooks
 
-Set `hook.after_mutation` to an absolute executable path. Tuxedo runs it
+Set `hook.after_mutation` to an absolute executable path. tuxedo-hooks runs it
 synchronously after every successful durable task-file mutation, directly and
 without a shell.
 
 ```toml
-hook.after_mutation = "/home/me/.config/tuxedo/hooks/todo-ledger-lint"
+hook.after_mutation = "/home/me/.config/tuxedo-hooks/hooks/todo-ledger-lint"
 ```
 
 The hook runs from the live todo file's parent directory with no task content
 in its arguments. It receives:
 
 ```text
-TUXEDO_HOOK_EVENT=create|update|complete|archive|delete|uncomplete|undo|unarchive
-TUXEDO_ROOT=/absolute/parent/of/todo.txt
-TUXEDO_TODO_FILE=/absolute/path/to/todo.txt
-TUXEDO_DONE_FILE=/absolute/path/to/done.txt
+TUXEDO_HOOKS_EVENT=create|update|complete|archive|delete|uncomplete|undo|unarchive
+TUXEDO_HOOKS_ROOT=/absolute/parent/of/todo.txt
+TUXEDO_HOOKS_TODO_FILE=/absolute/path/to/todo.txt
+TUXEDO_HOOKS_DONE_FILE=/absolute/path/to/done.txt
 ```
 
 Hook stdout and stderr are captured. A failing hook does not roll back the
@@ -641,8 +656,8 @@ round-trip as plain text, so you can add, rename, or delete them by editing
 `<name>` may not contain `=`.
 
 Task-note actions resolve relative `note:<path>` tokens under `notes_dir`.
-If `notes_dir` is not set, tuxedo falls back to `$NOTES_DIR` and then
-`~/notes`. `O` creates missing notes under `projects/tuxedo-tasks/` using a
+If `notes_dir` is not set, tuxedo-hooks falls back to `$NOTES_DIR` and then
+`~/notes`. `O` creates missing notes under `projects/tuxedo-hooks-tasks/` using a
 small Markdown template and appends the generated `note:<path>` token to the
 task; `o` only opens an existing linked note.
 
@@ -697,11 +712,7 @@ plain `cargo` commands if you don't use [mise](https://mise.jdx.dev/).
 ## Acknowledgments
 
 - [todo.txt](http://todotxt.org/) by Gina Trapani — the format that makes a tool like this possible.
-- [ratatui](https://ratatui.rs/) and [crossterm](https://github.com/crossterm-rs/crossterm) — the rendering and terminal-input crates tuxedo is built on.
-
-## Roadmap
-
-Planned and in-flight work lives in [`todo.txt`](./todo.txt) — eat your own dog food.
+- [ratatui](https://ratatui.rs/) and [crossterm](https://github.com/crossterm-rs/crossterm) — the rendering and terminal-input crates that tuxedo-hooks is built on.
 
 ## Contributing
 
