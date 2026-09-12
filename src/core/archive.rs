@@ -317,7 +317,7 @@ mod tests {
 
     fn dir_for(tag: &str) -> std::path::PathBuf {
         let dir = std::env::temp_dir().join(format!(
-            "tuxedo-archive-test-{}-{}",
+            "tuxedo-hooks-archive-test-{}-{}",
             std::process::id(),
             tag
         ));
@@ -371,7 +371,7 @@ mod tests {
     fn archive_emits_one_hook_after_both_files_commit() {
         let mut store = build_store("x 2026-05-05 2026-05-01 done\n");
         store.set_hooks(HookConfig {
-            after_mutation: Some("/definitely/not/a/tuxedo-hook".into()),
+            after_mutation: Some("/definitely/not/a/tuxedo-hooks-hook".into()),
         });
 
         assert!(matches!(
@@ -567,7 +567,10 @@ mod tests {
     fn persist_reports_write_failure() {
         let mut store = build_store("a\n");
         let missing_parent = std::env::temp_dir()
-            .join(format!("tuxedo-missing-parent-{}", std::process::id()))
+            .join(format!(
+                "tuxedo-hooks-missing-parent-{}",
+                std::process::id()
+            ))
             .join("todo.txt");
         let _ = std::fs::remove_dir_all(missing_parent.parent().unwrap());
         store.file_path = missing_parent;

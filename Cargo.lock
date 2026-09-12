@@ -1639,8 +1639,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "tuxedo"
-version = "2026.8.1"
+name = "tuxedo-hooks"
+version = "2026.9.1"
 dependencies = [
  "anyhow",
  "chrono",

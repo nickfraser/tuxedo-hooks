@@ -1,6 +1,6 @@
 {
-  "name": "tuxedo capture",
-  "short_name": "tuxedo",
+  "name": "tuxedo-hooks capture",
+  "short_name": "tuxedo-hooks",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

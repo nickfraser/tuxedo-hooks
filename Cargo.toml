@@ -1,7 +1,13 @@
 [package]
-name = "tuxedo"
-version = "2026.8.1"
+name = "tuxedo-hooks"
+version = "2026.9.1"
 edition = "2024"
+description = "Keyboard-driven terminal UI and CLI for todo.txt with post-mutation hooks"
+license = "MIT"
+repository = "https://github.com/nickfraser/tuxedo-hooks"
+homepage = "https://github.com/nickfraser/tuxedo-hooks"
+readme = "README.md"
+publish = false
 
 [dependencies]
 anyhow = "1.0"

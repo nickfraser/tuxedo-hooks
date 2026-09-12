@@ -121,12 +121,17 @@ enum TargetDecision {
     FirstRun,
 }
 
-/// Write the bundled sample todo.txt to the system temp dir and return
-/// its path. Also resets the sibling `done.txt` so a previous session's
-/// archived rows don't leak back as duplicates.
+/// Write the bundled sample todo.txt to an application-specific temporary
+/// directory and return its path. The sibling `done.txt` is reset so a prior
+/// sample session's archived rows do not leak back as duplicates.
 pub fn sample_path() -> io::Result<PathBuf> {
-    let dir = std::env::temp_dir();
-    let pb = dir.join("tuxedo-sample.txt");
+    sample_path_in(&std::env::temp_dir())
+}
+
+fn sample_path_in(temp_root: &Path) -> io::Result<PathBuf> {
+    let dir = temp_root.join("tuxedo-hooks-sample");
+    std::fs::create_dir_all(&dir)?;
+    let pb = dir.join("todo.txt");
     std::fs::write(&pb, sample::TODO_RAW)?;
     match std::fs::remove_file(dir.join("done.txt")) {
         Ok(_) => {}
@@ -174,5 +179,28 @@ mod tests {
     fn nothing_specified_is_first_run() {
         let d = decide_target(None, None, None, false);
         assert_eq!(d, TargetDecision::FirstRun);
+    }
+
+    #[test]
+    fn sample_uses_an_app_specific_temporary_directory() {
+        let root =
+            std::env::temp_dir().join(format!("tuxedo-hooks-sample-test-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).expect("create temporary root");
+        let unrelated_done = root.join("done.txt");
+        std::fs::write(&unrelated_done, "keep me").expect("write unrelated archive");
+
+        let path = sample_path_in(&root).expect("create sample");
+
+        assert_eq!(path, root.join("tuxedo-hooks-sample/todo.txt"));
+        assert_eq!(
+            std::fs::read_to_string(path).expect("read sample"),
+            sample::TODO_RAW
+        );
+        assert_eq!(
+            std::fs::read_to_string(unrelated_done).expect("read unrelated archive"),
+            "keep me"
+        );
+        let _ = std::fs::remove_dir_all(root);
     }
 }

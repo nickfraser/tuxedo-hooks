@@ -99,10 +99,10 @@ pub fn run(event: HookEvent, script: &Path, context: &HookContext) -> HookReport
     } else {
         match Command::new(script)
             .current_dir(&context.root)
-            .env("TUXEDO_HOOK_EVENT", event.as_str())
-            .env("TUXEDO_ROOT", &context.root)
-            .env("TUXEDO_TODO_FILE", &context.todo_file)
-            .env("TUXEDO_DONE_FILE", &context.done_file)
+            .env("TUXEDO_HOOKS_EVENT", event.as_str())
+            .env("TUXEDO_HOOKS_ROOT", &context.root)
+            .env("TUXEDO_HOOKS_TODO_FILE", &context.todo_file)
+            .env("TUXEDO_HOOKS_DONE_FILE", &context.done_file)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .output()
@@ -145,7 +145,7 @@ mod tests {
         use std::os::unix::fs::PermissionsExt;
 
         let dir = std::env::temp_dir().join(format!(
-            "tuxedo-hook-test-{}-{:?}",
+            "tuxedo-hooks-hook-test-{}-{:?}",
             std::process::id(),
             std::thread::current().id()
         ));
@@ -155,7 +155,7 @@ mod tests {
         let output = dir.join("context");
         std::fs::write(
             &script,
-            "#!/bin/sh\nprintf '%s\\n%s\\n%s\\n%s\\n%s\\n' \"$PWD\" \"$TUXEDO_HOOK_EVENT\" \"$TUXEDO_ROOT\" \"$TUXEDO_TODO_FILE\" \"$TUXEDO_DONE_FILE\" > context\n",
+            "#!/bin/sh\nprintf '%s\\n%s\\n%s\\n%s\\n%s\\n' \"$PWD\" \"$TUXEDO_HOOKS_EVENT\" \"$TUXEDO_HOOKS_ROOT\" \"$TUXEDO_HOOKS_TODO_FILE\" \"$TUXEDO_HOOKS_DONE_FILE\" > context\n",
         )
         .expect("write script");
         let mut permissions = std::fs::metadata(&script)
