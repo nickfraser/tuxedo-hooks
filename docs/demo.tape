@@ -1,4 +1,4 @@
-# VHS script for the README hero GIF.
+# VHS script for an optional project demo GIF.
 #
 #   vhs docs/demo.tape  →  docs/demo.gif
 #
@@ -18,15 +18,15 @@ Set Theme "Catppuccin Mocha"
 Set TypingSpeed 60ms
 Set Shell "bash"
 
-# Prep a clean empty file and an isolated XDG_CONFIG_HOME so the demo always
+# Prep a clean empty directory and an isolated XDG_CONFIG_HOME so the demo always
 # starts from default prefs, regardless of the user's local config. Hidden so
 # the recording opens directly into the TUI.
 Hide
-Type "rm -rf /tmp/tuxedo-demo-cfg && mkdir -p /tmp/tuxedo-demo-cfg && rm -f /tmp/tuxedo-demo.txt /tmp/tuxedo-demo.done.txt && touch /tmp/tuxedo-demo.txt && export TUXEDO_NO_UPDATE_CHECK=1 XDG_CONFIG_HOME=/tmp/tuxedo-demo-cfg && clear"
+Type "rm -rf /tmp/tuxedo-hooks-demo /tmp/tuxedo-hooks-demo-cfg && mkdir -p /tmp/tuxedo-hooks-demo /tmp/tuxedo-hooks-demo-cfg && touch /tmp/tuxedo-hooks-demo/todo.txt && export TUXEDO_HOOKS_NO_UPDATE_CHECK=1 XDG_CONFIG_HOME=/tmp/tuxedo-hooks-demo-cfg && clear"
 Enter
 Show
 
-Type "./target/release/tuxedo /tmp/tuxedo-demo.txt"
+Type "./target/release/tuxedo-hooks /tmp/tuxedo-hooks-demo/todo.txt"
 Enter
 
 # 1. Empty state — bowtie logo + quickstart panel.
